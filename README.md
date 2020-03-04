@@ -5,12 +5,14 @@ You can also use [postman](https://learning.postman.com/docs/postman/api-documen
 ## Installation
 ''' bash
 sudo apt-get update
+
 sudo apt-get -y install python3.3
 '''
 ## Requirement
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Flask and Pymongo
 '''bash
 pip install flask
+
 pip install pymongo
 '''
 You can create a virtual environment and install the required packages with the following commands:
