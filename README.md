@@ -6,7 +6,7 @@ You can also use [postman](https://learning.postman.com/docs/postman/api-documen
 ```bash
 sudo apt-get update
 
-sudo apt-get -y install python3.3
+sudo apt-get -y install python3.x
 ```
 
 ## Requirement

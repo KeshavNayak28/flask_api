@@ -12,6 +12,8 @@ Database.intialize()
 
 mongo_book = Book()
 
+
+
 ''' checks if the book to be added has specified fields'''
 def validbook(bookObject):
     if ('name' in bookObject and 'price' in bookObject or '_id' in bookObject):
@@ -59,6 +61,9 @@ def get_book_by_isbn(isbn):
     else:
         books['_id'] = str(books['_id'])
         return jsonify(books)
+
+
+
 
 '''Updates mongo book collection with specified isbn'''
 @app.route('/books/<int:isbn>', methods=['PATCH'])
