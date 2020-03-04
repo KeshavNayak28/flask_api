@@ -16,8 +16,10 @@ class Book:
     @staticmethod
     def from_mongo(query):
         mongo_data = Database.find_one(collection='posts', query={'isbn':int(query)})
-        print(mongo_data)
-        return dict(mongo_data)
+        if mongo_data == None:
+            return None
+        else:
+            return dict(mongo_data)
 
     @staticmethod
     def update_mongo_book(query, updates):
@@ -25,4 +27,5 @@ class Book:
 
     @staticmethod
     def delete_from_mongo(query):
-        Database.delete_one(collection='posts', query={'isbn':int(query)})
+        mongo_delete=Database.delete_one(collection='posts', query={'isbn':int(query)})
+        print(type(mongo_delete))

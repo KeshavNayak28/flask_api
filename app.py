@@ -29,9 +29,7 @@ def add_books():
             'price': book['price'],
             'isbn': book['isbn']
         }
-        print(new_books)
         mongo_book.add_to_mongo_directly(new_books)
-        print(new_books)
         new_books['_id']= str(new_books['_id'])
         return jsonify(new_books),200
     else:
@@ -48,9 +46,11 @@ def add_books():
 @app.route('/books/<int:isbn>', methods=['GET'])
 def get_book_by_isbn(isbn):
     books=mongo_book.from_mongo(isbn)
-    print(books)
-    books['_id'] = str(books['_id'])
-    return jsonify(books)
+    if books == None:
+        return 'book with isbn {} not availaible'.format(isbn)
+    else:
+        books['_id'] = str(books['_id'])
+        return jsonify(books)
 
 '''Updates mongo book collection with specified isbn'''
 @app.route('/books/<int:isbn>', methods=['PATCH'])
@@ -62,14 +62,17 @@ def update_books(isbn):
     if 'price' in update_book:
         new_book['price'] = update_book['price']
     mongo_book.update_mongo_book(isbn, new_book)
-    response = Response(json.dumps(new_book), status=204)
-    return response
+    return jsonify(new_book)
 
 '''Deletes a book from mongo collection with specified isbn'''
 @app.route('/books/<int:isbn>', methods=['DELETE'])
 def delete_book(isbn):
-    mongo_book.delete_from_mongo(isbn)
-    return 'deleted book with isbn {}'.format(isbn)
+    books = mongo_book.from_mongo(isbn)
+    if books == None:
+        return 'book with isbn {} not availaible '.format(isbn)
+    else:
+        mongo_book.delete_from_mongo(isbn)
+        return 'deleted book with isbn {}'.format(isbn)
 
 
 if __name__ == '__main__':
