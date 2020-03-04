@@ -19,6 +19,8 @@ def validbook(bookObject):
     else:
         return False
 
+
+
 '''Adds book with specified field to mongo'''
 @app.route('/books', methods=['POST'])
 def add_books():
@@ -29,9 +31,15 @@ def add_books():
             'price': book['price'],
             'isbn': book['isbn']
         }
-        mongo_book.add_to_mongo_directly(new_books)
-        new_books['_id']= str(new_books['_id'])
-        return jsonify(new_books),200
+        isbn=new_books['isbn']
+        books = mongo_book.from_mongo(isbn)
+        if books == None:
+            mongo_book.add_to_mongo_directly(new_books)
+            new_books['_id']= str(new_books['_id'])
+            return jsonify(new_books),200
+        else:
+            return 'book with isbn {} already exists'.format(isbn)
+
     else:
         invalidBookErrorMsg  = {
             "error" : "invalid book passed",
@@ -55,14 +63,21 @@ def get_book_by_isbn(isbn):
 '''Updates mongo book collection with specified isbn'''
 @app.route('/books/<int:isbn>', methods=['PATCH'])
 def update_books(isbn):
-    update_book = request.get_json()
-    new_book={}
-    if 'name' in update_book:
-        new_book['name'] = update_book['name']
-    if 'price' in update_book:
-        new_book['price'] = update_book['price']
-    mongo_book.update_mongo_book(isbn, new_book)
-    return jsonify(new_book)
+    books = mongo_book.from_mongo(isbn)
+    if books == None:
+        return 'book with isbn {} not availaible '.format(isbn)
+    else:
+        update_book = request.get_json()
+        new_book={}
+        if 'name' in update_book:
+            new_book['name'] = update_book['name']
+        if 'price' in update_book:
+            new_book['price'] = update_book['price']
+        mongo_book.update_mongo_book(isbn, new_book)
+        return jsonify(new_book)
+
+
+
 
 '''Deletes a book from mongo collection with specified isbn'''
 @app.route('/books/<int:isbn>', methods=['DELETE'])
@@ -73,6 +88,9 @@ def delete_book(isbn):
     else:
         mongo_book.delete_from_mongo(isbn)
         return 'deleted book with isbn {}'.format(isbn)
+
+
+
 
 
 if __name__ == '__main__':
