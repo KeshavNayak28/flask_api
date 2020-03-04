@@ -1,5 +1,6 @@
 # flask_api
 Flask application to save, update, delete and find data in mongo using api.
+
 You can also use [postman](https://learning.postman.com/docs/postman/api-documentation/documenting-your-api/) to verify ur requests.
 ## Installation
 ''' bash
@@ -15,7 +16,9 @@ pip install pymongo
 You can create a virtual environment and install the required packages with the following commands:
 
 $ virtualenv venv
+
 $ . venv/bin/activate
+
 (venv) $ pip install -r requirements.txt
 
 ## Running The Example
