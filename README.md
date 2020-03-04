@@ -26,5 +26,5 @@ $ . venv/bin/activate
 ```
 ## Running The Example
 ```bash
-(venv) $ python3 add.py
+(venv) $ python3 app.py
 ```
