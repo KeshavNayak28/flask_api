@@ -1,12 +1,6 @@
 from Database.database import Database
 
 class Book:
-    def __init__(self, name:str=None , price:int=None , isbn=None , _id=None):
-        self.name = name
-        self.price = price
-        self.isbn = isbn
-        self._id = _id
-
 
     @staticmethod
     def add_to_mongo_directly(data):
@@ -27,5 +21,4 @@ class Book:
 
     @staticmethod
     def delete_from_mongo(query):
-        mongo_delete=Database.delete_one(collection='posts', query={'isbn':int(query)})
-        print(type(mongo_delete))
+        Database.delete_one(collection='posts', query={'isbn':int(query)})

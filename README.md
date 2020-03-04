@@ -3,6 +3,7 @@ Flask application to save, update, delete and find data stored in [mongodb](http
 
 You can also use [postman](https://learning.postman.com/docs/postman/api-documentation/documenting-your-api/) to verify ur requests.
 ## Installation
+Commands to install python --version 3+
 ```bash
 sudo apt-get update
 

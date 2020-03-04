@@ -4,7 +4,6 @@ import json
 from Database.database import Database
 
 
-
 app = Flask(__name__)
 
 '''initializes Database connection to deault port 27017'''
