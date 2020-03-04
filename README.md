@@ -1,5 +1,5 @@
 # flask_api
-Flask application to save, update, delete and find data in mongo using api.
+Flask application to save, update, delete and find data stored in [mongodb](https://docs.mongodb.com/) using api.
 
 You can also use [postman](https://learning.postman.com/docs/postman/api-documentation/documenting-your-api/) to verify ur requests.
 ## Installation
