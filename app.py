@@ -22,33 +22,38 @@ def validbook(bookObject):
 
 
 
-'''Adds book with specified field to mongo'''
+'''Adds single book or list of books with specified field to mongo'''
 @app.route('/books', methods=['POST'])
 def add_books():
-    book =  request.get_json()
-    if validbook(book):
-        new_books = {
-            'name': book['name'],
-            'price': book['price'],
-            'isbn': book['isbn']
-        }
-        isbn=new_books['isbn']
-        books = mongo_book.from_mongo(isbn)
-        if books == None:
-            mongo_book.add_to_mongo_directly(new_books)
-            new_books['_id']= str(new_books['_id'])
-            return jsonify(new_books),200
+    new_collection = []
+    ls=[]
+    books =  request.get_json()
+    for book in books:
+        if validbook(book):
+            new_books = {
+                'name': book['name'],
+                'price': book['price'],
+                'isbn': book['isbn']
+            }
+            isbn=new_books['isbn']
+            collection = mongo_book.from_mongo(isbn)
+            if collection == None:
+                mongo_book.add_to_mongo_directly(new_books)
+                new_books['_id']= str(new_books['_id'])
+                new_collection.append(new_books)
+            else:
+                ls.append(new_books)
         else:
-            return 'book with isbn {} already exists'.format(isbn)
-
+            invalidBookErrorMsg  = {
+                "error" : "invalid book passed",
+                "helpstring" : "needs to be in form: {name:'bookname', 'price': int , 'isbn': UUID}"
+            }
+            response = Response(json.dumps(invalidBookErrorMsg), status=400, mimetype='application/json')
+            return response
+    if len(books) == len(new_collection):
+        return jsonify(new_collection), 200
     else:
-        invalidBookErrorMsg  = {
-            "error" : "invalid book passed",
-            "helpstring" : "needs to be in form: {name:'bookname', 'price': int , '_id': UUID}"
-        }
-        response = Response(json.dumps(invalidBookErrorMsg), status=400, mimetype='application/json')
-        return response
-
+        return 'books below sent to mongo \n {0} \n books below already exist \n {1} '.format(new_collection, ls)
 
 
 '''Gives the book with specified isbn from mongo'''
