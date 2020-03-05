@@ -31,3 +31,13 @@ $ . venv/bin/activate
 ```bash
 (venv) $ python3 app.py
 ```
+## Running Using Docker File
+To run the main program using Dockerfile pull the code to local system and run the DockerFile using command,
+```bash
+docker run -d -p 5000:5000 keshav/ubuntu:flask
+
+docker pull mongodb
+```
+The uri used in mongo connection in database.py is for the mongo image.
+
+For local setup use  uri="mongodb://127.0.0.1:27017"
