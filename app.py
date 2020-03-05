@@ -6,9 +6,13 @@ from Database.database import Database
 
 app = Flask(__name__)
 
+
 '''initializes Database connection to deault port 27017'''
 Database.intialize()
 
+
+
+'''calls the Book class in databse.py'''
 mongo_book = Book()
 
 
@@ -19,6 +23,7 @@ def validbook(bookObject):
         return True
     else:
         return False
+
 
 
 
@@ -56,6 +61,7 @@ def add_books():
         return 'books below sent to mongo \n {0} \n books below already exist \n {1} '.format(new_collection, ls)
 
 
+
 '''Gives the book with specified isbn from mongo'''
 @app.route('/books/<int:isbn>', methods=['GET'])
 def get_book_by_isbn(isbn):
@@ -83,7 +89,7 @@ def update_books(isbn):
         if 'price' in update_book:
             new_book['price'] = update_book['price']
         mongo_book.update_mongo_book(isbn, new_book)
-        return jsonify(new_book)
+        return get_book_by_isbn(isbn)
 
 
 
@@ -97,8 +103,6 @@ def delete_book(isbn):
     else:
         mongo_book.delete_from_mongo(isbn)
         return 'deleted book with isbn {}'.format(isbn)
-
-
 
 
 
