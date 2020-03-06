@@ -2,7 +2,7 @@ from flask import Flask, request, Response, jsonify
 from Database.post import Book
 import json
 from Database.database import Database
-
+import datetime
 
 app = Flask(__name__)
 
@@ -40,6 +40,7 @@ def add_books():
                 'price': book['price'],
                 'isbn': book['isbn']
             }
+            new_books.update({'date_of_creation':datetime.datetime.now()})
             isbn=new_books['isbn']
             collection = mongo_book.from_mongo(isbn)
             if collection == None:
