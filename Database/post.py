@@ -4,7 +4,7 @@ class Book:
 
     @staticmethod
     def add_to_mongo_directly(data):
-        mongo_data=Database.insert(collection='posts', data=data)
+        mongo_data=Database.insert_mongo(collection='posts', data=data)
         return mongo_data
 
     @staticmethod

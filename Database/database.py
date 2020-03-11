@@ -10,7 +10,7 @@ class Database:
         Database.DATABASE = client['config']
 
     @staticmethod
-    def insert(collection, data):
+    def insert_mongo(collection, data):
         Database.DATABASE[collection].insert(data)
 
     @staticmethod
@@ -20,7 +20,6 @@ class Database:
     @staticmethod
     def find_one(collection, query):
         return Database.DATABASE[collection].find_one(query)
-
 
     @staticmethod
     def delete_one(collection, query):

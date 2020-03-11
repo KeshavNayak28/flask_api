@@ -1,8 +1,10 @@
 from flask import Flask, request, Response, jsonify
 from Database.post import Book
-import json
 from Database.database import Database
+from Database.login import User
 import datetime
+import json
+
 
 app = Flask(__name__)
 
@@ -12,8 +14,9 @@ Database.intialize()
 
 
 
-'''calls the Book class in databse.py'''
+'''calls the Book class and User class in databse.py'''
 mongo_book = Book()
+mongo_user = User()
 
 
 
@@ -68,7 +71,7 @@ def add_books():
 def get_book_by_isbn(isbn):
     books=mongo_book.from_mongo(isbn)
     if books == None:
-        return 'book with isbn {} not availaible'.format(isbn)
+        return 'book with isbn {} not availaible'.format(isbn), 400
     else:
         books['_id'] = str(books['_id'])
         return jsonify(books)
@@ -80,6 +83,7 @@ def get_book_by_isbn(isbn):
 @app.route('/books/<int:isbn>', methods=['PATCH'])
 def update_books(isbn):
     books = mongo_book.from_mongo(isbn)
+    print(books)
     if books == None:
         return 'book with isbn {} not availaible '.format(isbn)
     else:
@@ -100,10 +104,10 @@ def update_books(isbn):
 def delete_book(isbn):
     books = mongo_book.from_mongo(isbn)
     if books == None:
-        return 'book with isbn {} not availaible '.format(isbn)
+        return 'book with isbn {} not availaible '.format(isbn), 400
     else:
         mongo_book.delete_from_mongo(isbn)
-        return 'deleted book with isbn {}'.format(isbn)
+        return 'deleted book with isbn {}'.format(isbn), 200
 
 
 
