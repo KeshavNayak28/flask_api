@@ -15,7 +15,7 @@ def test_mongo_add_book():
     response = requests.request("POST", 'http://localhost:5000/books', data=json.dumps(payload) ,headers = {'Content-Type': "application/json"})
     assert response.status_code == 200
 
-def test_mongo_get_book(isbn=418):
+def test_mongo_get_book(isbn=419):
     response = requests.request("GET", 'http://localhost:5000/books/{}'.format(isbn))
     assert response.status_code == 200
 

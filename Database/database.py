@@ -28,3 +28,7 @@ class Database:
     @staticmethod
     def update( myquery, updates, collection):
         return Database.DATABASE[collection].update_one(myquery, updates)
+
+    @staticmethod
+    def aggregate(collection, pipeline):
+        return Database.DATABASE[collection].aggregate(pipeline)

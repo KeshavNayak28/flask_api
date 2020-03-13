@@ -2,6 +2,7 @@ from flask import Flask, request, Response, jsonify
 from Database.post import Book
 from Database.database import Database
 from Database.login import User
+from Database.purchase import Purchase
 import datetime
 import json
 
@@ -17,6 +18,7 @@ Database.intialize()
 '''calls the Book class and User class in databse.py'''
 mongo_book = Book()
 mongo_user = User()
+mongo_purchase = Purchase()
 
 
 
@@ -28,6 +30,69 @@ def validbook(bookObject):
         return False
 
 
+'''-----------------------------------------Users collection---------------------------------------------------------'''
+
+'''creates a user and checks if he already exists'''
+@app.route('/users', methods=['POST'])
+def create_user():
+    user = request.get_json()
+    user_check = get_user_by_user_id(user['user_id'])
+    email_check = mongo_user.find_all_mongo(user['email'])
+    if len(email_check)>0:
+        return 'email {} already exists'.format(user['email'])
+    if user_check == 'user doesnt exist':
+            User.add_user(user)
+            return get_user_by_user_id(user['user_id'])
+    else:
+        return 'user exists'
+
+
+'''Gives user with specified id'''
+@app.route('/users/<user_id>', methods=['GET'])
+def get_user_by_user_id(user_id):
+    mongo_collection = mongo_user.get_user(user_id)
+    if mongo_collection == None:
+        return 'user doesnt exist'
+    else:
+        mongo_collection['_id'] = str(mongo_collection['_id'])
+        return mongo_collection
+
+
+''''---------------------------------------Purchase collection-------------------------------------------------------'''
+
+
+@app.route('/purchase/<user_id>/<isbn>', methods=['GET'])
+def user_purchase_book(user_id, isbn):
+    ls=[]
+    user_detail = get_user_by_user_id(user_id)
+    user = {
+            'user_name':user_detail['user_name'],
+            'user_id':user_detail['user_id'],
+            'email': user_detail['email']
+    }
+    book_choice = get_book_by_isbn(isbn)
+    book = {
+            'name' : book_choice['name'],
+            'price': book_choice['price'],
+            'isbn' : book_choice['isbn'],
+            'date_of_purchase': datetime.datetime.now()
+    }
+    user.update({'purchase_detail':book})
+    ls.append(user)
+    mongo_purchase.add_mongo_purchase(ls)
+    user['_id'] = str(user['_id'])
+    return user
+
+
+@app.route('/purchase/details/<user_id>', methods=['GET'])
+def user_purchase_detail(user_id):
+    all_purchases = mongo_purchase.from_mongo_purchase(user_id)
+    return jsonify(all_purchases)
+
+
+
+
+'''------------------------------------Books Collection--------------------------------------------------------------'''
 
 
 '''Adds single book or list of books with specified field to mongo'''
@@ -74,7 +139,7 @@ def get_book_by_isbn(isbn):
         return 'book with isbn {} not availaible'.format(isbn), 400
     else:
         books['_id'] = str(books['_id'])
-        return jsonify(books)
+        return books
 
 
 
