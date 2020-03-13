@@ -32,19 +32,32 @@ def validbook(bookObject):
 
 '''-----------------------------------------Users collection---------------------------------------------------------'''
 
+def validate_user(userObject):
+    if 'user_name' in userObject and 'email' in userObject and 'user_id' in userObject:
+        return True
+    else:
+        return False
+
 '''creates a user and checks if he already exists'''
 @app.route('/users', methods=['POST'])
 def create_user():
     user = request.get_json()
-    user_check = get_user_by_user_id(user['user_id'])
-    email_check = mongo_user.find_all_mongo(user['email'])
-    if len(email_check)>0:
-        return 'email {} already exists'.format(user['email'])
-    if user_check == 'user doesnt exist':
+    if validate_user(user):
+        user_check = get_user_by_user_id(user['user_id'])
+        email_check = mongo_user.find_all_mongo(user['email'])
+        if len(email_check)>0:
+            return 'email {} already exists'.format(user['email'])
+        if user_check == 'user doesnt exist':
             User.add_user(user)
             return get_user_by_user_id(user['user_id'])
+        else:
+            return 'user exists'
     else:
-        return 'user exists'
+        error_message ={
+            'error message':'invalid user passed',
+            "helpstring": "needs to be in form: {'user_name': string,    'email': str , 'user_id': unique_int}"
+        }
+        return error_message, 400
 
 
 '''Gives user with specified id'''
@@ -87,7 +100,10 @@ def user_purchase_book(user_id, isbn):
 @app.route('/purchase/details/<user_id>', methods=['GET'])
 def user_purchase_detail(user_id):
     all_purchases = mongo_purchase.from_mongo_purchase(user_id)
-    return jsonify(all_purchases)
+    if len(all_purchases)>0:
+        return jsonify(all_purchases)
+    else:
+        return 'No Purchases'
 
 
 
