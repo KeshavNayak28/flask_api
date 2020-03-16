@@ -22,14 +22,6 @@ mongo_purchase = Purchase()
 
 
 
-''' checks if the book to be added has specified fields'''
-def validbook(bookObject):
-    if ('name' in bookObject and 'price' in bookObject or '_id' in bookObject):
-        return True
-    else:
-        return False
-
-
 '''-----------------------------------------Users collection---------------------------------------------------------'''
 
 def validate_user(userObject):
@@ -109,6 +101,16 @@ def user_purchase_detail(user_id):
 
 
 '''------------------------------------Books Collection--------------------------------------------------------------'''
+
+
+''' checks if the book to be added has specified fields'''
+def validbook(bookObject):
+    if ('name' in bookObject and 'price' in bookObject or '_id' in bookObject):
+        return True
+    else:
+        return False
+
+
 
 
 '''Adds single book or list of books with specified field to mongo'''
