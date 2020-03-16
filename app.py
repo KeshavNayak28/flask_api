@@ -73,7 +73,7 @@ def get_user_by_user_id(user_id):
 
 ''''---------------------------------------Purchase collection-------------------------------------------------------'''
 
-
+'''adds user purchase details to mongo'''
 @app.route('/purchase/<user_id>/<isbn>', methods=['GET'])
 def user_purchase_book(user_id, isbn):
     ls=[]
@@ -96,7 +96,7 @@ def user_purchase_book(user_id, isbn):
     user['_id'] = str(user['_id'])
     return user
 
-
+'''aggregates and gives all purchases made by a single user'''
 @app.route('/purchase/details/<user_id>', methods=['GET'])
 def user_purchase_detail(user_id):
     all_purchases = mongo_purchase.from_mongo_purchase(user_id)
